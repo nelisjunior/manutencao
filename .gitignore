@@ -3,4 +3,5 @@ venv/
 env/
 out/
 
-
+config/config.json
+config/application_params.js
