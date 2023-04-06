@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Manutenção - {{ site.title }}</title>
+</head>
+<body style="background-image: url('src/img/Ltblgbpt-HD.jpg');">
+<div style="text-align: center; padding-top: 50px;">
+  <h1>Em Manutenção</h1>
+  <p>Desculpe o transtorno, estamos trabalhando para melhorar o nosso site.</p>
+  <p>O site deve estar de volta em:</p>
+  <div id="timer"></div>
+  <script>
+
+    let countDownDate = new Date("{{ site.end_date }}").getTime();
+    const x = setInterval(function () {
+      const now = new Date().getTime();
+      const distance = countDownDate - now;
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      document.getElementById("timer").innerHTML = days + "d " + hours + "h "
+              + minutes + "m " + seconds + "s ";
+      if (distance < 0) {
+        clearInterval(x);
+        document.getElementById("timer").innerHTML = "EXPIRED";
+      }
+    }, 1000);
+  </script>
+  <p>Número de visitas únicas durante a manutenção: {{ visit_count }}</p>
+</div>
+<footer style="text-align: center; padding-top: 50px;">
+    <p>Desenvolvido por <a href="
+  <p>© {{ site.title }} - {{ site.year }}</p>
+</footer>
+</body>
+</html>
