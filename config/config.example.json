@@ -1,0 +1,10 @@
+{
+  "site": {
+    "title": "Seu nome",
+    "description": "Descrição do seu site",
+    "site_url": "https://seu-site.com.br",
+    "POSSUI_LINKEDIN": "https://linkedin.com/in/seu-username",
+    "POSSUI_GITHUB": "https://github.com/seu-username",
+    "end_date": "2099-12-31"
+  }
+}
