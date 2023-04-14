@@ -9,3 +9,111 @@
   <p>Estamos em manutenção, por favor, volte mais tarde.</p>
 </body>
 </html>
+
+
+
+# Criar um VPC
+
+curl -X POST \
+"https://us-east.iaas.cloud.ibm.com/v1/vpcs?version=2023-03-30&generation=2" \
+-H "Authorization: Bearer $iam_token" \
+-H "Content-Type: application/json" \
+-H "accept: application/json" \
+-d '{
+"address_prefix_management": "auto",
+"name": "bct-v2023d100",
+"resource_group": {
+"id": "11901d413b074e73b8194abc167cfea2"
+}
+}'
+
+# Salve o ID gerado e use-o ao invés de '$vpc_id' no comando a seguir.
+
+# Criar uma regra padrão para o grupo de segurança padrão da VPC
+
+curl -X POST \
+"https://us-east.iaas.cloud.ibm.com/v1/security_groups/$security_group_id/rules?version=2023-03-30&generation=2" \
+-H "Authorization: Bearer $iam_token" \
+-H "Content-Type: application/json" \
+-H "accept: application/json" \
+-d '{
+"direction": "inbound",
+"ip_version": "ipv4",
+"protocol": "tcp",
+"port_min": 22,
+"port_max": 22
+}'
+
+
+
+# Criar uma regra padrão para o grupo de segurança padrão da VPC
+
+curl -X POST \
+"https://us-east.iaas.cloud.ibm.com/v1/security_groups/$security_group_id/rules?version=2023-03-30&generation=2" \
+-H "Authorization: Bearer $iam_token" \
+-H "Content-Type: application/json" \
+-H "accept: application/json" \
+-d '{
+"direction": "inbound",
+"ip_version": "ipv4",
+"protocol": "icmp",
+"type": 8
+}'
+
+
+
+# Crie uma sub-rede em seu VPC
+
+curl -X POST \
+"https://us-east.iaas.cloud.ibm.com/v1/subnets?version=2023-03-30&generation=2" \
+-H "Authorization: Bearer $iam_token" \
+-H "Content-Type: application/json" \
+-H "accept: application/json" \
+-d '{
+"zone": {
+"name": "us-east-1"
+},
+"resource_group": {
+"id": "11901d413b074e73b8194abc167cfea2"
+},
+"ip_version": "ipv4",
+"name": "sn-20230412-01",
+"ipv4_cidr_block": "10.241.0.0/24",
+"vpc": {
+"id": "$vpc_id"
+}
+}'
+
+# Salve o ID gerado e use-o ao invés de '$subnet_id' no comando a seguir.
+
+# Crie um gateway público para uma sub-rede
+
+curl -X POST \
+"https://us-east.iaas.cloud.ibm.com/v1/public_gateways?version=2023-03-30&generation=2" \
+-H "Authorization: Bearer $iam_token" \
+-H "Content-Type: application/json" \
+-H "accept: application/json" \
+-d '{
+"zone": {
+"name": "us-east-1"
+},
+"name": "pgw-2ece0d60-d945-11ed-95a6-97b0f60bfc1e",
+"vpc": {
+"id": "$vpc_id"
+}
+}'
+
+# Salve o ID gerado e use-o ao invés de '$public_gateway_id' no comando a seguir.
+
+# Conecte um gateway público a uma sub-rede
+
+curl -X PUT \
+"https://us-east.iaas.cloud.ibm.com/v1/subnets/$subnet_id/public_gateway?version=2023-03-30&generation=2" \
+-H "Authorization: Bearer $iam_token" \
+-H "Content-Type: application/json" \
+-H "accept: application/json" \
+-d '{
+"id": "$public_gateway_id"
+}'
+
+
